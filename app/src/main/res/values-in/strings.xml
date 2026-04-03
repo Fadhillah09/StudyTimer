@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Study Timer</string>
+    <string name="title_home">Study Timer</string>
+    <string name="label_name">Nama Anda</string>
+    <string name="label_select_mode">Pilih Mode</string>
+    <string name="mode_focus">Fokus</string>
+    <string name="welcome_header">Siap untuk Fokus?</string>
+    <string name="mode_break">Istirahat</string>
+    <string name="label_duration">Durasi</string>
+    <string name="label_category">Kategori Aktivitas</string>
+    <string name="label_choose_category">Pilih kategori</string>
+    <string name="cat_study">Belajar</string>
+    <string name="cat_assignment">Mengerjakan tugas</string>
+    <string name="cat_others">Lainnya</string>
+    <string name="label_other_desc">Keterangan lainnya</string>
+    <string name="btn_start_timer">Mulai Timer</string>
+    <string name="menu_history">Riwayat</string>
+    <string name="menu_settings">Pengaturan</string>
+    <string name="duration_25">25 menit</string>
+    <string name="duration_50">50 menit</string>
+    <string name="duration_90">90 menit</string>
+</resources>

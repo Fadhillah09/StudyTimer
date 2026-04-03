@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">Study Timer</string>
+    <string name="title_home">Study Timer</string>
+    <string name="label_name">Your Name</string>
+    <string name="label_select_mode">Select Mode</string>
+    <string name="mode_focus">Focus</string>
+    <string name="welcome_header">Ready to Focus?</string>
+    <string name="mode_break">Break</string>
+    <string name="label_duration">Duration</string>
+    <string name="label_category">Activity Category</string>
+    <string name="label_choose_category">Choose category</string>
+    <string name="cat_study">Study</string>
+    <string name="cat_assignment">Assignment</string>
+    <string name="cat_others">Others</string>
+    <string name="label_other_desc">Other description</string>
+    <string name="btn_start_timer">Start Timer</string>
+    <string name="menu_history">History</string>
+    <string name="menu_settings">Settings</string>
+    <string name="duration_25">25 minutes</string>
+    <string name="duration_50">50 minutes</string>
+    <string name="duration_90">90 minutes</string>
 </resources>
