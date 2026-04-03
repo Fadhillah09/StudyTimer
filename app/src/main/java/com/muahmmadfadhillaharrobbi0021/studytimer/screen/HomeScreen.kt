@@ -64,7 +64,15 @@ fun HomeScreen(
             CenterAlignedTopAppBar(
                 title = { Text(stringResource(R.string.title_home), fontWeight = FontWeight.ExtraBold, color = textPrimary) },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Transparent),
-                actions = { IconButton(onClick = { }) { Icon(Icons.Default.MoreVert, null, tint = textPrimary) } }
+                actions = {
+                    IconButton(onClick = { }) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = "About App",
+                            tint = textPrimary
+                        )
+                    }
+                }
             )
         },
         containerColor = Color.Transparent
