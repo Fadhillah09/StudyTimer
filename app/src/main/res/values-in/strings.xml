@@ -19,4 +19,8 @@
     <string name="duration_25">25 menit</string>
     <string name="duration_50">50 menit</string>
     <string name="duration_90">90 menit</string>
+    <string name="btn_start">Mulai</string>
+    <string name="btn_pause">Jeda</string>
+    <string name="btn_reset">Ulang</string>
+    <string name="share_message">Saya baru saja menyelesaikan sesi fokus: %1$s selama %2$d menit! #StudyTimer</string>
 </resources>

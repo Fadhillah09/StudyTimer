@@ -19,4 +19,8 @@
     <string name="duration_25">25 minutes</string>
     <string name="duration_50">50 minutes</string>
     <string name="duration_90">90 minutes</string>
+    <string name="btn_start">Start</string>
+    <string name="btn_pause">Pause</string>
+    <string name="btn_reset">Reset</string>
+    <string name="share_message">I just finished my focus session: %1$s for %2$d minutes! #StudyTimer</string>
 </resources>
