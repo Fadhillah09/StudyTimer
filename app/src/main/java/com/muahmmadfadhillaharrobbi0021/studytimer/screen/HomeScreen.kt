@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,8 +32,10 @@ import com.muahmmadfadhillaharrobbi0021.studytimer.R
 fun HomeScreen(
     onStartClick: () -> Unit,
     onHistoryClick: () -> Unit,
-    onSettingsClick: () -> Unit
+    onSettingsClick: () -> Unit,
+    onAboutClick: () -> Unit
 ) {
+    // --- 1. AMBIL SEMUA STRING DARI XML ---
     val modeFocus = stringResource(R.string.mode_focus)
     val modeBreak = stringResource(R.string.mode_break)
     val durationList = listOf(
@@ -44,19 +48,31 @@ fun HomeScreen(
         stringResource(R.string.cat_assignment),
         stringResource(R.string.cat_others)
     )
-    var name by remember { mutableStateOf("") }
-    var selectedMode by remember { mutableStateOf(modeFocus) }
-    var expandedDuration by remember { mutableStateOf(false) }
-    var selectedDuration by remember { mutableStateOf(durationList[0]) }
-    var expandedKategori by remember { mutableStateOf(false) }
-    var selectedKategori by remember { mutableStateOf(kategoriList[0]) }
-    var keteranganLainnya by remember { mutableStateOf("") }
-    val neonCyan = Color(0xFF00E5FF)
-    val darkBackground = Color(0xFF0A0A0A)
-    val darkSurface = Color(0xFF161616)
-    val textPrimary = Color.White
+
+    // Label Dinamis untuk Slider
+    val lowText = stringResource(R.string.con_low)
+    val medText = stringResource(R.string.con_med)
+    val highText = stringResource(R.string.con_high)
+
+    // --- 2. STATE ---
+    var activityName by rememberSaveable { mutableStateOf("") }
+    var selectedMode by rememberSaveable { mutableStateOf(modeFocus) }
+    var expandedDuration by rememberSaveable { mutableStateOf(false) }
+    var selectedDuration by rememberSaveable { mutableStateOf(durationList[0]) }
+    var expandedKategori by rememberSaveable { mutableStateOf(false) }
+    var selectedKategori by rememberSaveable { mutableStateOf(kategoriList[0]) }
+    var keteranganLainnya by rememberSaveable { mutableStateOf("") }
+    var concentrationLevel by rememberSaveable { mutableFloatStateOf(2f) }
+
+    // --- 3. WARNA DARI XML ---
+    val neonCyan = colorResource(R.color.neon_cyan)
+    val darkBackground = colorResource(R.color.dark_background)
+    val darkSurface = colorResource(R.color.dark_surface)
+    val neonBlueDark = colorResource(R.color.neon_blue_dark)
+    val textPrimary = colorResource(R.color.text_primary)
+
     val darkGradient = Brush.verticalGradient(
-        colors = listOf(darkBackground, Color(0xFF001020))
+        colors = listOf(darkBackground, neonBlueDark)
     )
 
     Scaffold(
@@ -65,23 +81,15 @@ fun HomeScreen(
                 title = { Text(stringResource(R.string.title_home), fontWeight = FontWeight.ExtraBold, color = textPrimary) },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Transparent),
                 actions = {
-                    IconButton(onClick = { }) {
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = "About App",
-                            tint = textPrimary
-                        )
+                    IconButton(onClick = onAboutClick) {
+                        Icon(imageVector = Icons.Default.Info, contentDescription = null, tint = textPrimary)
                     }
                 }
             )
         },
         containerColor = Color.Transparent
     ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(darkGradient)
-        ) {
+        Box(modifier = Modifier.fillMaxSize().background(darkGradient)) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -91,6 +99,7 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
+                // Raster Image
                 Image(
                     painter = painterResource(id = R.drawable.img_neon_timer),
                     contentDescription = null,
@@ -100,26 +109,27 @@ fun HomeScreen(
                         .clip(RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)),
                     contentScale = ContentScale.Crop
                 )
+
                 Text(
                     text = stringResource(R.string.welcome_header),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.ExtraBold,
                     color = neonCyan
                 )
+
                 ElevatedCard(
                     shape = RoundedCornerShape(28.dp),
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.elevatedCardColors(containerColor = darkSurface),
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp)
                 ) {
-                    Column(
-                        modifier = Modifier.padding(20.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
+                    Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+
+                        // Input Nama Aktivitas
                         OutlinedTextField(
-                            value = name,
-                            onValueChange = { name = it },
-                            label = { Text(stringResource(R.string.label_name), color = textPrimary) },
+                            value = activityName,
+                            onValueChange = { activityName = it },
+                            label = { Text(stringResource(R.string.label_activity_name), color = textPrimary) },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(16.dp),
                             singleLine = true,
@@ -131,24 +141,49 @@ fun HomeScreen(
                                 focusedLabelColor = neonCyan
                             )
                         )
+
+                        // Mode Radio Buttons
                         Column {
-                            Text(stringResource(R.string.label_select_mode), style = MaterialTheme.typography.labelLarge, color = textPrimary)
+                            Text(stringResource(R.string.label_select_mode), color = textPrimary, fontWeight = FontWeight.Bold)
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 RadioButton(
-                                    selected = selectedMode == "Focus",
-                                    onClick = { selectedMode = "Focus" },
-                                    colors = RadioButtonDefaults.colors(selectedColor = neonCyan, unselectedColor = Color.Gray)
+                                    selected = selectedMode == modeFocus,
+                                    onClick = { selectedMode = modeFocus },
+                                    colors = RadioButtonDefaults.colors(selectedColor = neonCyan)
                                 )
-                                Text(stringResource(R.string.mode_focus), color = textPrimary)
+                                Text(modeFocus, color = textPrimary)
                                 Spacer(Modifier.width(16.dp))
                                 RadioButton(
-                                    selected = selectedMode == "Break",
-                                    onClick = { selectedMode = "Break" },
-                                    colors = RadioButtonDefaults.colors(selectedColor = neonCyan, unselectedColor = Color.Gray)
+                                    selected = selectedMode == modeBreak,
+                                    onClick = { selectedMode = modeBreak },
+                                    colors = RadioButtonDefaults.colors(selectedColor = neonCyan)
                                 )
-                                Text(stringResource(R.string.mode_break), color = textPrimary)
+                                Text(modeBreak, color = textPrimary)
                             }
                         }
+
+                        // Slider Konsentrasi
+                        Column {
+                            val statusText = when {
+                                concentrationLevel < 1.5f -> lowText
+                                concentrationLevel < 2.5f -> medText
+                                else -> highText
+                            }
+                            Text(
+                                text = "${stringResource(R.string.label_concentration)}: $statusText",
+                                color = textPrimary,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Slider(
+                                value = concentrationLevel,
+                                onValueChange = { concentrationLevel = it },
+                                valueRange = 1f..3f,
+                                steps = 1,
+                                colors = SliderDefaults.colors(thumbColor = neonCyan, activeTrackColor = neonCyan)
+                            )
+                        }
+
+                        // Dropdown Durasi
                         ExposedDropdownMenuBox(
                             expanded = expandedDuration,
                             onExpandedChange = { expandedDuration = !expandedDuration }
@@ -163,11 +198,8 @@ fun HomeScreen(
                                 shape = RoundedCornerShape(16.dp),
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedTextColor = textPrimary,
-                                    unfocusedTextColor = textPrimary,
                                     focusedBorderColor = neonCyan,
-                                    unfocusedBorderColor = Color.Gray,
                                     focusedLabelColor = neonCyan,
-                                    unfocusedLabelColor = Color.Gray,
                                     focusedTrailingIconColor = neonCyan
                                 )
                             )
@@ -179,14 +211,13 @@ fun HomeScreen(
                                 durationList.forEach { duration ->
                                     DropdownMenuItem(
                                         text = { Text(duration, color = textPrimary) },
-                                        onClick = {
-                                            selectedDuration = duration
-                                            expandedDuration = false
-                                        }
+                                        onClick = { selectedDuration = duration; expandedDuration = false }
                                     )
                                 }
                             }
                         }
+
+                        // Dropdown Kategori
                         ExposedDropdownMenuBox(
                             expanded = expandedKategori,
                             onExpandedChange = { expandedKategori = !expandedKategori }
@@ -201,9 +232,7 @@ fun HomeScreen(
                                 shape = RoundedCornerShape(16.dp),
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedTextColor = textPrimary,
-                                    unfocusedTextColor = textPrimary,
                                     focusedBorderColor = neonCyan,
-                                    unfocusedBorderColor = Color.Gray,
                                     focusedLabelColor = neonCyan,
                                     focusedTrailingIconColor = neonCyan
                                 )
@@ -216,68 +245,41 @@ fun HomeScreen(
                                 kategoriList.forEach { kategori ->
                                     DropdownMenuItem(
                                         text = { Text(kategori, color = textPrimary) },
-                                        onClick = {
-                                            selectedKategori = kategori
-                                            expandedKategori = false
-                                        }
+                                        onClick = { selectedKategori = kategori; expandedKategori = false }
                                     )
                                 }
                             }
                         }
-                        if (selectedKategori == stringResource(R.string.cat_others)) {
-                            OutlinedTextField(
-                                value = keteranganLainnya,
-                                onValueChange = { keteranganLainnya = it },
-                                label = { Text(stringResource(R.string.label_other_desc), color = textPrimary) },
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(16.dp),
-                                colors = OutlinedTextFieldDefaults.colors(
-                                    focusedTextColor = textPrimary,
-                                    unfocusedTextColor = textPrimary,
-                                    focusedBorderColor = neonCyan,
-                                    unfocusedBorderColor = Color.Gray,
-                                    focusedLabelColor = neonCyan
-                                )
-                            )
-                        }
                     }
                 }
+
+                // Tombol Start
                 Button(
                     onClick = onStartClick,
+                    enabled = activityName.isNotBlank(),
                     modifier = Modifier.fillMaxWidth().height(60.dp),
                     shape = RoundedCornerShape(20.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = neonCyan, contentColor = Color.Black),
-                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp)
+                    colors = ButtonDefaults.buttonColors(containerColor = neonCyan, contentColor = Color.Black)
                 ) {
                     Icon(Icons.Default.PlayArrow, null)
                     Spacer(Modifier.width(8.dp))
-                    Text(stringResource(R.string.btn_start_timer), fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.btn_start_timer), fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 }
+
+                // Row Kartu Menu
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    SmallMenuCard(
-                        title = stringResource(R.string.menu_history),
-                        icon = Icons.Default.History,
-                        modifier = Modifier.weight(1f),
-                        onClick = onHistoryClick,
-                        accentColor = neonCyan
-                    )
-                    SmallMenuCard(
-                        title = stringResource(R.string.menu_settings),
-                        icon = Icons.Default.Settings,
-                        modifier = Modifier.weight(1f),
-                        onClick = onSettingsClick,
-                        accentColor = neonCyan
-                    )
+                    SmallMenuCard(stringResource(R.string.menu_history), Icons.Default.History, Modifier.weight(1f), onHistoryClick, neonCyan)
+                    SmallMenuCard(stringResource(R.string.menu_settings), Icons.Default.Settings, Modifier.weight(1f), onSettingsClick, neonCyan)
                 }
-
                 Spacer(modifier = Modifier.height(32.dp))
             }
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SmallMenuCard(title: String, icon: ImageVector, modifier: Modifier, onClick: () -> Unit, accentColor: Color) {
@@ -285,7 +287,7 @@ fun SmallMenuCard(title: String, icon: ImageVector, modifier: Modifier, onClick:
         onClick = onClick,
         modifier = modifier.height(90.dp),
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.elevatedCardColors(containerColor = Color(0xFF161616))
+        colors = CardDefaults.elevatedCardColors(containerColor = colorResource(R.color.dark_surface))
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
