@@ -23,4 +23,13 @@
     <string name="btn_pause">Pause</string>
     <string name="btn_reset">Reset</string>
     <string name="share_message">I just finished my focus session: %1$s for %2$d minutes! #StudyTimer</string>
+    <string name="setting_profile">User Profile</string>
+    <string name="setting_notif_sound">Notification &amp; Sound</string>
+    <string name="setting_alarm_test">Test Alarm Sound</string>
+    <string name="setting_vibration_test">Test Vibration</string>
+    <string name="setting_others">Others</string>
+    <string name="setting_language">Change Language</string>
+    <string name="setting_language_sub">Open device language settings</string>
+    <string name="setting_about">About Application</string>
+    <string name="setting_version">Version 1.0.0 Stable</string>
 </resources>

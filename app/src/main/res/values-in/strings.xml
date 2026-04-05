@@ -23,4 +23,13 @@
     <string name="btn_pause">Jeda</string>
     <string name="btn_reset">Ulang</string>
     <string name="share_message">Saya baru saja menyelesaikan sesi fokus: %1$s selama %2$d menit! #StudyTimer</string>
+    <string name="setting_profile">Profil Pengguna</string>
+    <string name="setting_notif_sound">Notifikasi &amp; Suara</string>
+    <string name="setting_alarm_test">Test Suara Alarm</string>
+    <string name="setting_vibration_test">Test Getaran</string>
+    <string name="setting_others">Lainnya</string>
+    <string name="setting_language">Ganti Bahasa / Language</string>
+    <string name="setting_language_sub">Buka pengaturan bahasa perangkat</string>
+    <string name="setting_about">Tentang Aplikasi</string>
+    <string name="setting_version">Versi 1.0.0 Stabil</string>
 </resources>

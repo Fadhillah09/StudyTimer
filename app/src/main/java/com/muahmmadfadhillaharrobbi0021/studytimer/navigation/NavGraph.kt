@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.muahmmadfadhillaharrobbi0021.studytimer.screen.HomeScreen
+import com.muahmmadfadhillaharrobbi0021.studytimer.screen.SettingsScreen
 import com.muahmmadfadhillaharrobbi0021.studytimer.screen.TimerScreen
 
 @Composable
@@ -47,8 +48,11 @@ fun NavGraph(navController: NavHostController) {
         }
 
         composable("settings") {
+            SettingsScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
         }
-
     }
-
 }
