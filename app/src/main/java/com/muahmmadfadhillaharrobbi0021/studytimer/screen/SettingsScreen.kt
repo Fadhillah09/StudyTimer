@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -28,26 +29,33 @@ import com.muahmmadfadhillaharrobbi0021.studytimer.R
 
 @Composable
 fun SettingsScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onAboutClick: () -> Unit
 ) {
     val context = LocalContext.current
-    var isNotificationEnabled by remember { mutableStateOf(false) }
-    var isVibrationEnabled by remember { mutableStateOf(false) }
+    val sharedPref = remember { context.getSharedPreferences("study_timer_prefs", Context.MODE_PRIVATE) }
+    var isNotificationEnabled by remember {
+        mutableStateOf(sharedPref.getBoolean("notification_enabled", false))
+    }
+
     val neonCyan = colorResource(R.color.neon_cyan)
     val darkBackground = colorResource(R.color.dark_background)
     val darkSurface = colorResource(R.color.dark_surface)
     val textPrimary = colorResource(R.color.text_primary)
     val neonBlueDark = colorResource(R.color.neon_blue_dark)
+
     val darkGradient = Brush.verticalGradient(
         colors = listOf(darkBackground, neonBlueDark)
     )
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text(stringResource(R.string.menu_settings), fontWeight = FontWeight.ExtraBold, color = textPrimary) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null, tint = textPrimary)
+                        // Menggunakan AutoMirrored agar tidak deprecated
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = textPrimary)
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Transparent)
@@ -76,20 +84,28 @@ fun SettingsScreen(
                     darkSurface = darkSurface,
                     onClick = {}
                 )
+
                 Spacer(modifier = Modifier.height(8.dp))
+
                 Text(stringResource(R.string.setting_notif_sound), color = neonCyan, fontWeight = FontWeight.Bold)
+
                 SettingSwitchCard(
                     title = stringResource(R.string.setting_alarm_test),
                     checked = isNotificationEnabled,
-                    onCheckedChange = {
-                        isNotificationEnabled = it
-                        if (it) playTestSound(context)
+                    onCheckedChange = { newState ->
+                        isNotificationEnabled = newState
+                        // Simpan secara permanen ke memori HP
+                        sharedPref.edit().putBoolean("notification_enabled", newState).apply()
+
+                        if (newState) playTestSound(context)
                     },
                     icon = Icons.Default.Notifications,
                     neonCyan = neonCyan,
                     darkSurface = darkSurface
                 )
+
                 Text(stringResource(R.string.setting_others), color = neonCyan, fontWeight = FontWeight.Bold)
+
                 SettingItemCard(
                     title = stringResource(R.string.setting_language),
                     subtitle = stringResource(R.string.setting_language_sub),
@@ -101,13 +117,14 @@ fun SettingsScreen(
                         context.startActivity(intent)
                     }
                 )
+
                 SettingItemCard(
                     title = stringResource(R.string.setting_about),
                     subtitle = stringResource(R.string.setting_version),
                     icon = Icons.Default.Info,
                     neonCyan = neonCyan,
                     darkSurface = darkSurface,
-                    onClick = { /* Dialog About */ }
+                    onClick = onAboutClick
                 )
             }
         }
@@ -126,7 +143,6 @@ fun playTestSound(context: Context) {
         e.printStackTrace()
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
