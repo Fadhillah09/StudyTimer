@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Study Timer</string>
     <string name="title_home">Study Timer</string>
-    <string name="label_name">Nama Anda</string>
     <string name="label_select_mode">Pilih Mode</string>
     <string name="mode_focus">Fokus</string>
     <string name="welcome_header">Siap untuk Fokus?</string>
@@ -32,4 +31,14 @@
     <string name="setting_language_sub">Buka pengaturan bahasa perangkat</string>
     <string name="setting_about">Tentang Aplikasi</string>
     <string name="setting_version">Versi 1.0.0 Stabil</string>
+    <string name="label_activity_name">Mata Kuliah</string>
+    <string name="label_concentration">Level Konsentrasi</string>
+    <string name="con_low">Rendah</string>
+    <string name="con_med">Sedang</string>
+    <string name="con_high">Tinggi</string>
+    <string name="title_about">Tentang App</string>
+    <string name="about_desc">Study Timer adalah aplikasi produktivitas yang dirancang untuk membantu Anda fokus pada studi atau tugas menggunakan interval fokus dan istirahat yang dapat disesuaikan. Tetap disiplin dan capai tujuan Anda!</string>
+    <string name="about_developer">Pengembang</string>
+    <string name="about_version_label">Versi</string>
+    <string name="about_contact">Kontak</string>
 </resources>
