@@ -30,7 +30,7 @@ import com.muahmmadfadhillaharrobbi0021.studytimer.R
 
 @Composable
 fun HomeScreen(
-    onStartClick: (String, Int, String, Int) -> Unit,
+    onStartClick: (String, Int, String, Int, String) -> Unit,
     onHistoryClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onAboutClick: () -> Unit
@@ -38,6 +38,7 @@ fun HomeScreen(
     val modeFocus = stringResource(R.string.mode_focus)
     val modeBreak = stringResource(R.string.mode_break)
     val durationList = listOf(
+        stringResource(R.string.duration_10s),
         stringResource(R.string.duration_25),
         stringResource(R.string.duration_50),
         stringResource(R.string.duration_90)
@@ -242,7 +243,7 @@ fun HomeScreen(
                 Button(
                     onClick = {
                         val durationInt = selectedDuration.filter { it.isDigit() }.toIntOrNull() ?: 25
-                        onStartClick(activityName, durationInt, selectedKategori, concentrationLevel.toInt())
+                        onStartClick(activityName, durationInt, selectedKategori, concentrationLevel.toInt(), selectedMode)
                     },
                     enabled = activityName.isNotBlank(),
                     modifier = Modifier.fillMaxWidth().height(60.dp),

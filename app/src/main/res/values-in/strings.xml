@@ -15,6 +15,7 @@
     <string name="btn_start_timer">Mulai Timer</string>
     <string name="menu_history">Riwayat</string>
     <string name="menu_settings">Pengaturan</string>
+    <string name="duration_10s">10 second</string>
     <string name="duration_25">25 menit</string>
     <string name="duration_50">50 menit</string>
     <string name="duration_90">90 menit</string>
@@ -24,7 +25,7 @@
     <string name="share_message">Saya baru saja menyelesaikan sesi fokus: %1$s selama %2$d menit! #StudyTimer</string>
     <string name="setting_profile">Profil Pengguna</string>
     <string name="setting_notif_sound">Notifikasi &amp; Suara</string>
-    <string name="setting_alarm_test">Test Suara Alarm</string>
+    <string name="setting_alarm_test">Suara Alarm</string>
     <string name="setting_vibration_test">Test Getaran</string>
     <string name="setting_others">Lainnya</string>
     <string name="setting_language">Ganti Bahasa / Language</string>
@@ -45,4 +46,6 @@
     <string name="rec_long">Saran: Sesi cukup panjang. Istirahat 10-15 menit.</string>
     <string name="rec_low_con">Saran: Konsentrasi rendah. Gunakan istirahat singkat 5 menit.</string>
     <string name="rec_default">Saran: Istirahat 5 menit untuk menyegarkan pikiran.</string>
+    <string name="history_empty">Belum ada riwayat. Ayo mulai belajar!</string>
+    <string name="history_clear">Hapus Riwayat</string>
 </resources>

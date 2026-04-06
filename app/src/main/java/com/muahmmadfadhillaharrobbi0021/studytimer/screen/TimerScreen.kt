@@ -31,10 +31,13 @@ fun TimerScreen(
     activityName: String,
     durationMinutes: Int,
     category: String,
-    concentration: Int
+    concentration: Int,
+    mode: String
 ) {
     val context = LocalContext.current
-    var timeLeft by remember { mutableStateOf(durationMinutes * 60) }
+    var timeLeft by remember {
+        mutableIntStateOf(if (durationMinutes == 10) 10 else durationMinutes * 60)
+    }
     var isRunning by remember { mutableStateOf(false) }
     var hasShared by remember { mutableStateOf(false) }
 
@@ -49,6 +52,7 @@ fun TimerScreen(
 
     val breakRecommendation = remember(durationMinutes, concentration) {
         when {
+            durationMinutes == 10 -> ""
             durationMinutes >= 90 -> context.getString(R.string.rec_heavy)
             durationMinutes >= 50 -> context.getString(R.string.rec_long)
             concentration == 1 -> context.getString(R.string.rec_low_con)
@@ -63,6 +67,24 @@ fun TimerScreen(
         } else if (timeLeft == 0 && isRunning && !hasShared) {
             isRunning = false
             hasShared = true
+
+            val sharedPref = context.getSharedPreferences("study_timer_prefs", Context.MODE_PRIVATE)
+            val concentrationText = when(concentration) {
+                1 -> "Low"
+                2 -> "Med"
+                3 -> "High"
+                else -> "Med"
+            }
+            val isAlarmEnabled = sharedPref.getBoolean("notification_enabled", false)
+
+            if (isAlarmEnabled) {
+                playTestSound(context)
+            }
+            val currentHistory = sharedPref.getString("history_data", "")
+            val timeLabel = if (durationMinutes == 10) "10 sec" else "$durationMinutes min"
+            val newEntry = " [$mode] [$concentrationText] $category: $activityName ($timeLabel)"
+            val updatedHistory = if (currentHistory.isNullOrEmpty()) newEntry else "$currentHistory|$newEntry"
+            sharedPref.edit().putString("history_data", updatedHistory).apply()
             shareResults(context, activityName, durationMinutes)
         }
     }

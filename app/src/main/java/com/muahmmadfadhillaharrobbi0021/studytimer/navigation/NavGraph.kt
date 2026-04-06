@@ -5,6 +5,7 @@
     import androidx.navigation.compose.NavHost
     import androidx.navigation.compose.composable
     import com.muahmmadfadhillaharrobbi0021.studytimer.screen.AboutAppScreen
+    import com.muahmmadfadhillaharrobbi0021.studytimer.screen.HistoryScreen
     import com.muahmmadfadhillaharrobbi0021.studytimer.screen.HomeScreen
     import com.muahmmadfadhillaharrobbi0021.studytimer.screen.SettingsScreen
     import com.muahmmadfadhillaharrobbi0021.studytimer.screen.TimerScreen
@@ -18,8 +19,8 @@
         ) {
             composable("home") {
                 HomeScreen(
-                    onStartClick = { name, duration, cat, conc ->
-                        navController.navigate("timer/$name/$duration/$cat/$conc")
+                    onStartClick = { name, duration, cat, conc, mode ->
+                        navController.navigate("timer/$name/$duration/$cat/$conc/$mode")
                     },
                     onHistoryClick = {
                         navController.navigate("history")
@@ -33,22 +34,27 @@
                 )
             }
 
-            composable("timer/{name}/{duration}/{cat}/{conc}") { backStackEntry ->
+            composable("timer/{name}/{duration}/{cat}/{conc}/{mode}") { backStackEntry ->
                 val name = backStackEntry.arguments?.getString("name") ?: ""
                 val duration = backStackEntry.arguments?.getString("duration")?.toIntOrNull() ?: 25
                 val cat = backStackEntry.arguments?.getString("cat") ?: ""
                 val conc = backStackEntry.arguments?.getString("conc")?.toIntOrNull() ?: 2
+                val mode = backStackEntry.arguments?.getString("mode") ?: "Focus"
 
                 TimerScreen(
                     onBackClick = { navController.popBackStack() },
                     activityName = name,
                     durationMinutes = duration,
                     category = cat,
-                    concentration = conc
+                    concentration = conc,
+                    mode = mode
                 )
             }
 
             composable("history") {
+                HistoryScreen(
+                    onBackClick = { navController.popBackStack() }
+                )
             }
 
             composable("settings") {
