@@ -30,12 +30,11 @@ import com.muahmmadfadhillaharrobbi0021.studytimer.R
 
 @Composable
 fun HomeScreen(
-    onStartClick: () -> Unit,
+    onStartClick: (String, Int, String, Int) -> Unit,
     onHistoryClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onAboutClick: () -> Unit
 ) {
-    // --- 1. AMBIL SEMUA STRING DARI XML ---
     val modeFocus = stringResource(R.string.mode_focus)
     val modeBreak = stringResource(R.string.mode_break)
     val durationList = listOf(
@@ -49,22 +48,18 @@ fun HomeScreen(
         stringResource(R.string.cat_others)
     )
 
-    // Label Dinamis untuk Slider
     val lowText = stringResource(R.string.con_low)
     val medText = stringResource(R.string.con_med)
     val highText = stringResource(R.string.con_high)
 
-    // --- 2. STATE ---
     var activityName by rememberSaveable { mutableStateOf("") }
     var selectedMode by rememberSaveable { mutableStateOf(modeFocus) }
     var expandedDuration by rememberSaveable { mutableStateOf(false) }
     var selectedDuration by rememberSaveable { mutableStateOf(durationList[0]) }
     var expandedKategori by rememberSaveable { mutableStateOf(false) }
     var selectedKategori by rememberSaveable { mutableStateOf(kategoriList[0]) }
-    var keteranganLainnya by rememberSaveable { mutableStateOf("") }
     var concentrationLevel by rememberSaveable { mutableFloatStateOf(2f) }
 
-    // --- 3. WARNA DARI XML ---
     val neonCyan = colorResource(R.color.neon_cyan)
     val darkBackground = colorResource(R.color.dark_background)
     val darkSurface = colorResource(R.color.dark_surface)
@@ -99,7 +94,6 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                // Raster Image
                 Image(
                     painter = painterResource(id = R.drawable.img_neon_timer),
                     contentDescription = null,
@@ -117,6 +111,7 @@ fun HomeScreen(
                     color = neonCyan
                 )
 
+                // Card Form Input
                 ElevatedCard(
                     shape = RoundedCornerShape(28.dp),
                     modifier = Modifier.fillMaxWidth(),
@@ -124,8 +119,6 @@ fun HomeScreen(
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp)
                 ) {
                     Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-
-                        // Input Nama Aktivitas
                         OutlinedTextField(
                             value = activityName,
                             onValueChange = { activityName = it },
@@ -141,8 +134,6 @@ fun HomeScreen(
                                 focusedLabelColor = neonCyan
                             )
                         )
-
-                        // Mode Radio Buttons
                         Column {
                             Text(stringResource(R.string.label_select_mode), color = textPrimary, fontWeight = FontWeight.Bold)
                             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -161,8 +152,6 @@ fun HomeScreen(
                                 Text(modeBreak, color = textPrimary)
                             }
                         }
-
-                        // Slider Konsentrasi
                         Column {
                             val statusText = when {
                                 concentrationLevel < 1.5f -> lowText
@@ -216,8 +205,6 @@ fun HomeScreen(
                                 }
                             }
                         }
-
-                        // Dropdown Kategori
                         ExposedDropdownMenuBox(
                             expanded = expandedKategori,
                             onExpandedChange = { expandedKategori = !expandedKategori }
@@ -252,10 +239,11 @@ fun HomeScreen(
                         }
                     }
                 }
-
-                // Tombol Start
                 Button(
-                    onClick = onStartClick,
+                    onClick = {
+                        val durationInt = selectedDuration.filter { it.isDigit() }.toIntOrNull() ?: 25
+                        onStartClick(activityName, durationInt, selectedKategori, concentrationLevel.toInt())
+                    },
                     enabled = activityName.isNotBlank(),
                     modifier = Modifier.fillMaxWidth().height(60.dp),
                     shape = RoundedCornerShape(20.dp),
@@ -265,15 +253,26 @@ fun HomeScreen(
                     Spacer(Modifier.width(8.dp))
                     Text(stringResource(R.string.btn_start_timer), fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 }
-
-                // Row Kartu Menu
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    SmallMenuCard(stringResource(R.string.menu_history), Icons.Default.History, Modifier.weight(1f), onHistoryClick, neonCyan)
-                    SmallMenuCard(stringResource(R.string.menu_settings), Icons.Default.Settings, Modifier.weight(1f), onSettingsClick, neonCyan)
+                    SmallMenuCard(
+                        title = stringResource(R.string.menu_history),
+                        icon = Icons.Default.History,
+                        modifier = Modifier.weight(1f),
+                        onClick = onHistoryClick,
+                        accentColor = neonCyan
+                    )
+                    SmallMenuCard(
+                        title = stringResource(R.string.menu_settings),
+                        icon = Icons.Default.Settings,
+                        modifier = Modifier.weight(1f),
+                        onClick = onSettingsClick,
+                        accentColor = neonCyan
+                    )
                 }
+
                 Spacer(modifier = Modifier.height(32.dp))
             }
         }

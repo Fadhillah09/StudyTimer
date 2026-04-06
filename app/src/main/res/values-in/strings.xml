@@ -37,8 +37,12 @@
     <string name="con_med">Sedang</string>
     <string name="con_high">Tinggi</string>
     <string name="title_about">Tentang App</string>
-    <string name="about_desc">Study Timer adalah aplikasi produktivitas yang dirancang untuk membantu Anda fokus pada studi atau tugas menggunakan interval fokus dan istirahat yang dapat disesuaikan. Tetap disiplin dan capai tujuan Anda!</string>
+    <string name="about_desc">Study Timer adalah aplikasi produktivitas yang dirancang untuk membantu Anda fokus pada studi atau tugas menggunakan interval fokus dan istirahat yang dapat disesuaikan. Serta memproses dan memberikan rekomendasi saran waktu untuk istirahat.</string>
     <string name="about_developer">Pengembang</string>
     <string name="about_version_label">Versi</string>
     <string name="about_contact">Kontak</string>
+    <string name="rec_heavy">Saran: Sesi berat. Istirahatlah selama 20-25 menit.</string>
+    <string name="rec_long">Saran: Sesi cukup panjang. Istirahat 10-15 menit.</string>
+    <string name="rec_low_con">Saran: Konsentrasi rendah. Gunakan istirahat singkat 5 menit.</string>
+    <string name="rec_default">Saran: Istirahat 5 menit untuk menyegarkan pikiran.</string>
 </resources>

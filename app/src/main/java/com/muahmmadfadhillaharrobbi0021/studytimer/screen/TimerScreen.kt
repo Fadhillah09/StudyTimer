@@ -7,7 +7,6 @@ import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -20,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muahmmadfadhillaharrobbi0021.studytimer.R
@@ -28,22 +28,34 @@ import kotlinx.coroutines.delay
 @Composable
 fun TimerScreen(
     onBackClick: () -> Unit,
-    activityName: String = "Study Session",
-    durationMinutes: Int = 25
+    activityName: String,
+    durationMinutes: Int,
+    category: String,
+    concentration: Int
 ) {
     val context = LocalContext.current
     var timeLeft by remember { mutableStateOf(durationMinutes * 60) }
     var isRunning by remember { mutableStateOf(false) }
     var hasShared by remember { mutableStateOf(false) }
+
     val neonCyan = Color(0xFF00E5FF)
     val darkBackground = Color(0xFF0A0A0A)
     val darkSurface = Color(0xFF161616)
     val textPrimary = Color.White
+
     val darkGradient = Brush.verticalGradient(
         colors = listOf(darkBackground, Color(0xFF001020))
     )
 
-    // --- Timer Logic & Implicit Intent Trigger ---
+    val breakRecommendation = remember(durationMinutes, concentration) {
+        when {
+            durationMinutes >= 90 -> context.getString(R.string.rec_heavy)
+            durationMinutes >= 50 -> context.getString(R.string.rec_long)
+            concentration == 1 -> context.getString(R.string.rec_low_con)
+            else -> context.getString(R.string.rec_default)
+        }
+    }
+
     LaunchedEffect(isRunning, timeLeft) {
         if (isRunning && timeLeft > 0) {
             delay(1000L)
@@ -92,6 +104,26 @@ fun TimerScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
+                Text(
+                    text = "$category - $activityName",
+                    color = neonCyan,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = breakRecommendation,
+                    color = Color.LightGray,
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
                 ElevatedCard(
                     shape = CircleShape,
                     modifier = Modifier
@@ -119,17 +151,12 @@ fun TimerScreen(
                                 color = neonCyan,
                                 fontSize = 72.sp
                             )
-                            Text(
-                                text = activityName,
-                                color = Color.Gray,
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 16.sp
-                            )
                         }
                     }
                 }
 
                 Spacer(modifier = Modifier.height(80.dp))
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
@@ -149,6 +176,7 @@ fun TimerScreen(
                     }
 
                     Spacer(modifier = Modifier.width(32.dp))
+
                     Button(
                         onClick = { isRunning = !isRunning },
                         modifier = Modifier.size(90.dp),
@@ -165,7 +193,9 @@ fun TimerScreen(
                             modifier = Modifier.size(40.dp)
                         )
                     }
+
                     Spacer(modifier = Modifier.width(32.dp))
+
                     OutlinedIconButton(
                         onClick = { shareResults(context, activityName, durationMinutes) },
                         modifier = Modifier.size(60.dp),
@@ -179,6 +209,7 @@ fun TimerScreen(
         }
     }
 }
+
 fun shareResults(context: Context, activity: String, minutes: Int) {
     val message = context.getString(R.string.share_message, activity, minutes)
     val sendIntent: Intent = Intent().apply {

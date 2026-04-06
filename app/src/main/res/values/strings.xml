@@ -31,14 +31,19 @@
     <string name="setting_language_sub">Open device language settings</string>
     <string name="setting_about">About Application</string>
     <string name="setting_version">Version 1.0.0 Stable</string>
-    <string name="label_activity_name">Activity Name</string>
+    <string name="label_activity_name">Course</string>
     <string name="label_concentration">Concentration Level</string>
     <string name="con_low">Low</string>
     <string name="con_med">Medium</string>
     <string name="con_high">High</string>
     <string name="title_about">About App</string>
-    <string name="about_desc">Study Timer is a productivity app designed to help you focus on your studies or tasks using customizable focus and break intervals. Stay disciplined and achieve your goals!</string>
+    <string name="about_desc">Study Timer is a productivity app designed to help you focus on your studies or tasks using customizable focus and break intervals. SAs well as processing and providing recommendations for rest time.</string>
     <string name="about_developer">Developer</string>
     <string name="about_version_label">Version</string>
     <string name="about_contact">Contact</string>
+    <string name="rec_heavy">Suggestion: Heavy session. Take 20-25 minutes break.</string>
+    <string name="rec_long">Suggestion: Long session. Take 10-15 minutes break.</string>
+    <string name="rec_low_con">Suggestion: Low concentration. Use a short 5-minute break.</string>
+    <string name="rec_default">Suggestion: Take a 5-minute break to refresh.</string>
+
 </resources>

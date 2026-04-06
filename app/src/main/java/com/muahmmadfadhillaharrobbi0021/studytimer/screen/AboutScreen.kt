@@ -33,7 +33,6 @@ import com.muahmmadfadhillaharrobbi0021.studytimer.R
 fun AboutAppScreen(
     onBackClick: () -> Unit
 ) {
-    // Ambil warna dari colors.xml
     val neonCyan = colorResource(R.color.neon_cyan)
     val darkBackground = colorResource(R.color.dark_background)
     val darkSurface = colorResource(R.color.dark_surface)
@@ -49,7 +48,6 @@ fun AboutAppScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        // PERBAIKAN: Ganti R.id ke R.string
                         text = stringResource(R.string.title_about),
                         fontWeight = FontWeight.ExtraBold,
                         color = textPrimary
@@ -75,11 +73,10 @@ fun AboutAppScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState()) // KRITERIA: Support Scroll
+                    .verticalScroll(rememberScrollState())
                     .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // KRITERIA: Gambar Raster (img_neon_timer)
                 Image(
                     painter = painterResource(id = R.drawable.img_neon_timer),
                     contentDescription = "App Illustration",
@@ -92,8 +89,6 @@ fun AboutAppScreen(
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
-
-                // KRITERIA: Deskripsi Aplikasi
                 ElevatedCard(
                     shape = RoundedCornerShape(24.dp),
                     colors = CardDefaults.elevatedCardColors(containerColor = darkSurface),
@@ -108,7 +103,6 @@ fun AboutAppScreen(
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
-                            // PERBAIKAN: Sesuaikan dengan nama about_desc di strings.xml kamu
                             text = stringResource(R.string.about_desc),
                             style = MaterialTheme.typography.bodyMedium,
                             color = textPrimary,
@@ -169,8 +163,6 @@ fun AboutAppScreen(
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Versi Aplikasi (Tambahan agar lengkap)
                 Text(
                     text = "${stringResource(R.string.about_version_label)} 1.0.0 Stable",
                     style = MaterialTheme.typography.labelSmall,

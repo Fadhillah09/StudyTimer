@@ -54,7 +54,6 @@ fun SettingsScreen(
                 title = { Text(stringResource(R.string.menu_settings), fontWeight = FontWeight.ExtraBold, color = textPrimary) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        // Menggunakan AutoMirrored agar tidak deprecated
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = textPrimary)
                     }
                 },
@@ -86,15 +85,12 @@ fun SettingsScreen(
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Text(stringResource(R.string.setting_notif_sound), color = neonCyan, fontWeight = FontWeight.Bold)
-
                 SettingSwitchCard(
                     title = stringResource(R.string.setting_alarm_test),
                     checked = isNotificationEnabled,
                     onCheckedChange = { newState ->
                         isNotificationEnabled = newState
-                        // Simpan secara permanen ke memori HP
                         sharedPref.edit().putBoolean("notification_enabled", newState).apply()
 
                         if (newState) playTestSound(context)
@@ -131,7 +127,6 @@ fun SettingsScreen(
     }
 }
 
-// FUNGSI BUNYI
 fun playTestSound(context: Context) {
     try {
         val mediaPlayer = MediaPlayer.create(context, Settings.System.DEFAULT_NOTIFICATION_URI)
