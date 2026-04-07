@@ -15,7 +15,7 @@
     <string name="btn_start_timer">Mulai Timer</string>
     <string name="menu_history">Riwayat</string>
     <string name="menu_settings">Pengaturan</string>
-    <string name="duration_10s">10 second</string>
+    <string name="duration_10s">10 detik</string>
     <string name="duration_25">25 menit</string>
     <string name="duration_50">50 menit</string>
     <string name="duration_90">90 menit</string>
