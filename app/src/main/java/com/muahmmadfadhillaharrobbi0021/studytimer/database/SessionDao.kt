@@ -19,7 +19,7 @@ interface SessionDao {
     @Query("SELECT * FROM sessions ORDER BY timestamp DESC")
     fun getSessions(): Flow<List<Session>>
 
-    @Query("SELECT * FROM sessions WHERE id = :id")
+    @Query("SELECT * FROM sessions WHERE id = :id LIMIT 1")
     suspend fun getSessionById(id: Long): Session?
 
     @Query("DELETE FROM sessions WHERE id = :id")
@@ -27,4 +27,5 @@ interface SessionDao {
 
     @Query("DELETE FROM sessions")
     suspend fun deleteAll()
+
 }

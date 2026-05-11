@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muahmmadfadhillaharrobbi0021.studytimer.R
+import androidx.core.content.edit
 
 @Composable
 fun SettingsScreen(
@@ -91,7 +92,7 @@ fun SettingsScreen(
                     checked = isNotificationEnabled,
                     onCheckedChange = { newState ->
                         isNotificationEnabled = newState
-                        sharedPref.edit().putBoolean("notification_enabled", newState).apply()
+                        sharedPref.edit { putBoolean("notification_enabled", newState) }
 
                         if (newState) playTestSound(context)
                     },

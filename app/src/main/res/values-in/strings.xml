@@ -42,10 +42,22 @@
     <string name="about_developer">Pengembang</string>
     <string name="about_version_label">Versi</string>
     <string name="about_contact">Kontak</string>
-    <string name="rec_heavy">Saran: Sesi berat. Istirahatlah selama 20-25 menit.</string>
-    <string name="rec_long">Saran: Sesi cukup panjang. Istirahat 10-15 menit.</string>
+    <string name="rec_heavy">Saran: Sesi berat. Istirahatlah selama 20&#8211;25 menit.</string>
+    <string name="rec_long">Saran: Sesi cukup panjang. Istirahat 10&#8211;15 menit.</string>
     <string name="rec_low_con">Saran: Konsentrasi rendah. Gunakan istirahat singkat 5 menit.</string>
     <string name="rec_default">Saran: Istirahat 5 menit untuk menyegarkan pikiran.</string>
     <string name="history_empty">Belum ada riwayat. Ayo mulai belajar!</string>
     <string name="history_clear">Hapus Riwayat</string>
+    <string name="edit_session">Ubah Sesi</string>
+    <string name="label_save">Simpan</string>
+    <string name="label_back">Kembali</string>
+    <string name="label_delete">Hapus</string>
+    <string name="label_more">Opsi lainnya</string>
+    <string name="dialog_delete_message">Hapus sesi ini?</string>
+    <string name="dialog_confirm">Hapus</string>
+    <string name="dialog_cancel">Batal</string>
+    <string name="invalid_input">Nama aktivitas tidak boleh kosong</string>
+    <string name="delete_all_title">Hapus semua sesi?</string>
+    <string name="delete_all_message">Semua riwayat belajar akan dihapus permanen dan tidak bisa dikembalikan.</string>
+    <string name="label_cancel">Batal</string>
 </resources>

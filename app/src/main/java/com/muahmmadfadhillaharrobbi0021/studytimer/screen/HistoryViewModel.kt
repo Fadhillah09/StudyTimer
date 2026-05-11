@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HistoryViewModel(private val dao: SessionDao) : ViewModel() {
 
@@ -39,8 +40,10 @@ class HistoryViewModel(private val dao: SessionDao) : ViewModel() {
         }
     }
 
-    fun getSessionById(id: Long): Session? {
-        return sessions.value.find { it.id == id }
+    suspend fun getSessionById(id: Long): Session? {
+        return withContext(Dispatchers.IO) {
+            dao.getSessionById(id)
+        }
     }
 
     fun update(

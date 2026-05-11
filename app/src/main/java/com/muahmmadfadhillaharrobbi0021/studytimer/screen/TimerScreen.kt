@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -22,8 +23,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.muahmmadfadhillaharrobbi0021.studytimer.R
+import com.muahmmadfadhillaharrobbi0021.studytimer.utils.ViewModelFactory
 import kotlinx.coroutines.delay
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun TimerScreen(
@@ -35,6 +41,9 @@ fun TimerScreen(
     mode: String
 ) {
     val context = LocalContext.current
+    val factory = ViewModelFactory(context)
+    val viewModel: HistoryViewModel = viewModel(factory = factory)
+
     var timeLeft by remember {
         mutableIntStateOf(if (durationMinutes == 10) 10 else durationMinutes * 60)
     }
@@ -68,23 +77,34 @@ fun TimerScreen(
             isRunning = false
             hasShared = true
 
-            val sharedPref = context.getSharedPreferences("study_timer_prefs", Context.MODE_PRIVATE)
-            val concentrationText = when(concentration) {
-                1 -> "Low"
-                2 -> "Med"
-                3 -> "High"
-                else -> "Med"
+            val concentrationText = when (concentration) {
+                1 -> context.getString(R.string.con_low)
+                3 -> context.getString(R.string.con_high)
+                else -> context.getString(R.string.con_med)
             }
-            val isAlarmEnabled = sharedPref.getBoolean("notification_enabled", false)
+            val timeLabel = if (durationMinutes == 10) {
+                context.getString(R.string.duration_10s)
+            } else {
+                "$durationMinutes min"
+            }
+            val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+            val timestamp = formatter.format(Date())
 
+            viewModel.insert(
+                courseName = activityName,
+                mode = mode,
+                concentration = concentrationText,
+                duration = timeLabel,
+                category = category,
+                timestamp = timestamp
+            )
+
+            val sharedPref = context.getSharedPreferences("study_timer_prefs", Context.MODE_PRIVATE)
+            val isAlarmEnabled = sharedPref.getBoolean("notification_enabled", false)
             if (isAlarmEnabled) {
                 playTestSound(context)
             }
-            val currentHistory = sharedPref.getString("history_data", "")
-            val timeLabel = if (durationMinutes == 10) "10 sec" else "$durationMinutes min"
-            val newEntry = " [$mode] [$concentrationText] $category: $activityName ($timeLabel)"
-            val updatedHistory = if (currentHistory.isNullOrEmpty()) newEntry else "$currentHistory|$newEntry"
-            sharedPref.edit().putString("history_data", updatedHistory).apply()
+
             shareResults(context, activityName, durationMinutes)
         }
     }
@@ -104,15 +124,20 @@ fun TimerScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null, tint = textPrimary)
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null,
+                            tint = textPrimary
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Transparent)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color.Transparent
+                )
             )
         },
         containerColor = Color.Transparent
     ) { paddingValues ->
-
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -164,10 +189,9 @@ fun TimerScreen(
                                 .clip(CircleShape)
                                 .background(neonCyan.copy(alpha = 0.05f))
                         )
-
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = String.format("%02d:%02d", minutes, seconds),
+                                text = String.format(Locale.US, "%02d:%02d", minutes, seconds),
                                 style = MaterialTheme.typography.displayLarge,
                                 fontWeight = FontWeight.ExtraBold,
                                 color = neonCyan,
@@ -186,7 +210,7 @@ fun TimerScreen(
                 ) {
                     OutlinedIconButton(
                         onClick = {
-                            timeLeft = durationMinutes * 60
+                            timeLeft = if (durationMinutes == 10) 10 else durationMinutes * 60
                             isRunning = false
                             hasShared = false
                         },
@@ -194,7 +218,11 @@ fun TimerScreen(
                         shape = CircleShape,
                         border = androidx.compose.foundation.BorderStroke(1.dp, Color.Gray)
                     ) {
-                        Icon(Icons.Default.Refresh, contentDescription = null, tint = Color.Gray)
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = null,
+                            tint = Color.Gray
+                        )
                     }
 
                     Spacer(modifier = Modifier.width(32.dp))
@@ -224,7 +252,11 @@ fun TimerScreen(
                         shape = CircleShape,
                         border = androidx.compose.foundation.BorderStroke(1.dp, neonCyan)
                     ) {
-                        Icon(Icons.Default.Share, contentDescription = null, tint = neonCyan)
+                        Icon(
+                            imageVector = Icons.Default.Share,
+                            contentDescription = null,
+                            tint = neonCyan
+                        )
                     }
                 }
             }
@@ -239,7 +271,6 @@ fun shareResults(context: Context, activity: String, minutes: Int) {
         putExtra(Intent.EXTRA_TEXT, message)
         type = "text/plain"
     }
-
     val shareIntent = Intent.createChooser(sendIntent, "Share your progress!")
     context.startActivity(shareIntent)
 }

@@ -4,18 +4,7 @@ package com.muahmmadfadhillaharrobbi0021.studytimer.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,18 +12,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.History
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -43,13 +22,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.muahmmadfadhillaharrobbi0021.studytimer.R
 import com.muahmmadfadhillaharrobbi0021.studytimer.model.Session
-import com.muahmmadfadhillaharrobbi0021.studytimer.util.ViewModelFactory
+import com.muahmmadfadhillaharrobbi0021.studytimer.utils.ViewModelFactory
 
+@Suppress("ASSIGNED_VALUE_IS_NEVER_READ")
 @Composable
 fun HistoryScreen(
     onBackClick: () -> Unit,
@@ -62,13 +43,57 @@ fun HistoryScreen(
 
     val neonCyan = colorResource(R.color.neon_cyan)
     val darkBackground = colorResource(R.color.dark_background)
-    val darkSurface = colorResource(R.color.dark_surface)
     val textPrimary = colorResource(R.color.text_primary)
     val neonBlueDark = colorResource(R.color.neon_blue_dark)
+    val darkSurface = colorResource(R.color.dark_surface)
 
     val darkGradient = Brush.verticalGradient(
         colors = listOf(darkBackground, neonBlueDark)
     )
+
+    var showDeleteAllDialog by remember { mutableStateOf(false) }
+
+    if (showDeleteAllDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteAllDialog = false },
+            containerColor = darkSurface,
+            shape = RoundedCornerShape(16.dp),
+            title = {
+                Text(
+                    text = stringResource(R.string.delete_all_title),
+                    color = textPrimary,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.delete_all_message),
+                    color = textPrimary.copy(alpha = 0.6f),
+                    fontSize = 13.sp
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.deleteAll()
+                        showDeleteAllDialog = false
+                    },
+                    colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)
+                ) {
+                    Text(stringResource(R.string.label_delete), fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showDeleteAllDialog = false },
+                    colors = ButtonDefaults.textButtonColors(contentColor = textPrimary)
+                ) {
+                    Text(stringResource(R.string.label_cancel))
+                }
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -81,6 +106,7 @@ fun HistoryScreen(
                     )
                 },
                 navigationIcon = {
+                    // ✅ Tombol back tanpa kotak, sama seperti semula
                     IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -91,7 +117,8 @@ fun HistoryScreen(
                 },
                 actions = {
                     if (sessions.isNotEmpty()) {
-                        IconButton(onClick = { viewModel.deleteAll() }) {
+                        // ✅ Tombol delete tanpa kotak, sama seperti semula
+                        IconButton(onClick = { showDeleteAllDialog = true }) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
                                 contentDescription = null,
@@ -134,8 +161,8 @@ fun HistoryScreen(
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(24.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    contentPadding = PaddingValues(horizontal = 20.dp, vertical = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     items(sessions) { session ->
                         HistoryCard(
@@ -158,35 +185,76 @@ fun HistoryCard(
     accentColor: Color,
     onClick: () -> Unit
 ) {
+    val modeDisplay = when (session.mode) {
+        "Focus", "Fokus"     -> stringResource(R.string.mode_focus)
+        "Break", "Istirahat" -> stringResource(R.string.mode_break)
+        else                 -> session.mode
+    }
+    val concentrationDisplay = when (session.concentration) {
+        "Low", "Rendah"    -> stringResource(R.string.con_low)
+        "Medium", "Sedang" -> stringResource(R.string.con_med)
+        "High", "Tinggi"   -> stringResource(R.string.con_high)
+        else               -> session.concentration
+    }
+    val categoryDisplay = when (session.category) {
+        "Study", "Belajar"    -> stringResource(R.string.cat_study)
+        "Assignment", "Tugas" -> stringResource(R.string.cat_assignment)
+        "Others", "Lainnya"   -> stringResource(R.string.cat_others)
+        else                  -> session.category
+    }
+
+    val dotColor = when (session.mode) {
+        "Break", "Istirahat" -> Color(0xFFFF7EB3)
+        else                 -> accentColor
+    }
+
     ElevatedCard(
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(14.dp),
         colors = CardDefaults.elevatedCardColors(containerColor = cardColor),
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Box(
                 modifier = Modifier
                     .size(8.dp)
-                    .background(accentColor, RoundedCornerShape(4.dp))
+                    .background(dotColor, RoundedCornerShape(4.dp))
             )
-            Spacer(modifier = Modifier.width(16.dp))
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "[${session.mode}] [${session.concentration}] ${session.category}: ${session.courseName}",
+                    text = "${stringResource(R.string.label_activity_name)}: ${session.courseName}",
                     color = Color.White,
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    maxLines = 1
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
-                    text = "${session.duration} • ${session.timestamp}",
+                    text = "${stringResource(R.string.label_select_mode)}: $modeDisplay",
                     color = Color.Gray,
                     fontSize = 12.sp
+                )
+                Text(
+                    text = "${stringResource(R.string.label_concentration)}: $concentrationDisplay",
+                    color = Color.Gray,
+                    fontSize = 12.sp
+                )
+                Text(
+                    text = "${stringResource(R.string.label_category)}: $categoryDisplay",
+                    color = Color.Gray,
+                    fontSize = 12.sp
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "${session.duration} • ${session.timestamp}",
+                    color = Color.Gray.copy(alpha = 0.6f),
+                    fontSize = 11.sp
                 )
             }
         }

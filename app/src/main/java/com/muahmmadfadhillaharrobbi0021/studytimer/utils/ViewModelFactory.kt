@@ -1,4 +1,4 @@
-package com.muahmmadfadhillaharrobbi0021.studytimer.util
+package com.muahmmadfadhillaharrobbi0021.studytimer.utils
 
 import android.content.Context
 import androidx.lifecycle.ViewModel

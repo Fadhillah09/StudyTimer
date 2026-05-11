@@ -42,10 +42,22 @@
     <string name="about_developer">Developer</string>
     <string name="about_version_label">Version</string>
     <string name="about_contact">Contact</string>
-    <string name="rec_heavy">Suggestion: Heavy session. Take 20-25 minutes break.</string>
-    <string name="rec_long">Suggestion: Long session. Take 10-15 minutes break.</string>
+    <string name="rec_heavy">Suggestion: Heavy session. Take 20&#8211;25 minutes break.</string>
+    <string name="rec_long">Suggestion: Long session. Take 10&#8211;15 minutes break.</string>
     <string name="rec_low_con">Suggestion: Low concentration. Use a short 5-minute break.</string>
     <string name="rec_default">Suggestion: Take a 5-minute break to refresh.</string>
     <string name="history_empty">No history yet. Start studying!</string>
     <string name="history_clear">Clear History</string>
+    <string name="edit_session">Edit Session</string>
+    <string name="label_save">Save</string>
+    <string name="label_back">Back</string>
+    <string name="label_delete">Delete</string>
+    <string name="label_more">More options</string>
+    <string name="dialog_delete_message">Delete this session?</string>
+    <string name="dialog_confirm">Delete</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="invalid_input">Activity name cannot be empty</string>
+    <string name="delete_all_title">Delete all sessions?</string>
+    <string name="delete_all_message">All learning history will be permanently deleted and cannot be restored.</string>
+    <string name="label_cancel">Cancel</string>
 </resources>
