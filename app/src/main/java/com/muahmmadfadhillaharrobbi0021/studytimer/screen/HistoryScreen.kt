@@ -4,16 +4,48 @@ package com.muahmmadfadhillaharrobbi0021.studytimer.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ViewList
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.History
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -28,18 +60,22 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.muahmmadfadhillaharrobbi0021.studytimer.R
 import com.muahmmadfadhillaharrobbi0021.studytimer.model.Session
+import com.muahmmadfadhillaharrobbi0021.studytimer.utils.SettingsDataStore
 import com.muahmmadfadhillaharrobbi0021.studytimer.utils.ViewModelFactory
+import kotlinx.coroutines.launch
 
-@Suppress("ASSIGNED_VALUE_IS_NEVER_READ")
 @Composable
 fun HistoryScreen(
     onBackClick: () -> Unit,
     onItemClick: (Long) -> Unit
 ) {
     val context = LocalContext.current
-    val factory = ViewModelFactory(context)
-    val viewModel: HistoryViewModel = viewModel(factory = factory)
+    val viewModel: HistoryViewModel = viewModel(factory = ViewModelFactory(context))
     val sessions by viewModel.sessions.collectAsState()
+
+    val dataStore = SettingsDataStore(context)
+    val showList by dataStore.layoutFlow.collectAsState(initial = true)
+    val scope = rememberCoroutineScope()
 
     val neonCyan = colorResource(R.color.neon_cyan)
     val darkBackground = colorResource(R.color.dark_background)
@@ -106,7 +142,6 @@ fun HistoryScreen(
                     )
                 },
                 navigationIcon = {
-                    // ✅ Tombol back tanpa kotak, sama seperti semula
                     IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -116,8 +151,18 @@ fun HistoryScreen(
                     }
                 },
                 actions = {
+                    // Toggle list/grid
+                    IconButton(onClick = {
+                        scope.launch { dataStore.saveLayout(!showList) }
+                    }) {
+                        Icon(
+                            imageVector = if (showList) Icons.Default.GridView
+                            else Icons.AutoMirrored.Filled.ViewList,
+                            contentDescription = null,
+                            tint = neonCyan
+                        )
+                    }
                     if (sessions.isNotEmpty()) {
-                        // ✅ Tombol delete tanpa kotak, sama seperti semula
                         IconButton(onClick = { showDeleteAllDialog = true }) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
@@ -159,18 +204,37 @@ fun HistoryScreen(
                     )
                 }
             } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(horizontal = 20.dp, vertical = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    items(sessions) { session ->
-                        HistoryCard(
-                            session = session,
-                            cardColor = darkSurface,
-                            accentColor = neonCyan,
-                            onClick = { onItemClick(session.id) }
-                        )
+                if (showList) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        items(sessions) { session ->
+                            HistoryCard(
+                                session = session,
+                                cardColor = darkSurface,
+                                accentColor = neonCyan,
+                                onClick = { onItemClick(session.id) }
+                            )
+                        }
+                    }
+                } else {
+                    LazyVerticalStaggeredGrid(
+                        columns = StaggeredGridCells.Fixed(2),
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(12.dp),
+                        verticalItemSpacing = 10.dp,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        items(sessions) { session ->
+                            HistoryGridCard(
+                                session = session,
+                                cardColor = darkSurface,
+                                accentColor = neonCyan,
+                                onClick = { onItemClick(session.id) }
+                            )
+                        }
                     }
                 }
             }
@@ -202,7 +266,6 @@ fun HistoryCard(
         "Others", "Lainnya"   -> stringResource(R.string.cat_others)
         else                  -> session.category
     }
-
     val dotColor = when (session.mode) {
         "Break", "Istirahat" -> Color(0xFFFF7EB3)
         else                 -> accentColor
@@ -257,6 +320,79 @@ fun HistoryCard(
                     fontSize = 11.sp
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun HistoryGridCard(
+    session: Session,
+    cardColor: Color,
+    accentColor: Color,
+    onClick: () -> Unit
+) {
+    val modeDisplay = when (session.mode) {
+        "Focus", "Fokus"     -> stringResource(R.string.mode_focus)
+        "Break", "Istirahat" -> stringResource(R.string.mode_break)
+        else                 -> session.mode
+    }
+    val concentrationDisplay = when (session.concentration) {
+        "Low", "Rendah"    -> stringResource(R.string.con_low)
+        "Medium", "Sedang" -> stringResource(R.string.con_med)
+        "High", "Tinggi"   -> stringResource(R.string.con_high)
+        else               -> session.concentration
+    }
+    val categoryDisplay = when (session.category) {
+        "Study", "Belajar"    -> stringResource(R.string.cat_study)
+        "Assignment", "Tugas" -> stringResource(R.string.cat_assignment)
+        "Others", "Lainnya"   -> stringResource(R.string.cat_others)
+        else                  -> session.category
+    }
+    val dotColor = when (session.mode) {
+        "Break", "Istirahat" -> Color(0xFFFF7EB3)
+        else                 -> accentColor
+    }
+
+    ElevatedCard(
+        shape = RoundedCornerShape(14.dp),
+        colors = CardDefaults.elevatedCardColors(containerColor = cardColor),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(8.dp)
+                    .background(dotColor, RoundedCornerShape(4.dp))
+            )
+            Text(
+                text = "${stringResource(R.string.label_activity_name)}: ${session.courseName}",
+                color = Color.White,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = "$modeDisplay • $concentrationDisplay",
+                color = accentColor,
+                fontSize = 11.sp,
+                maxLines = 1
+            )
+            Text(
+                text = categoryDisplay,
+                color = Color.Gray,
+                fontSize = 11.sp
+            )
+            Text(
+                text = "${session.duration}\n${session.timestamp}",
+                color = Color.Gray.copy(alpha = 0.6f),
+                fontSize = 11.sp
+            )
         }
     }
 }

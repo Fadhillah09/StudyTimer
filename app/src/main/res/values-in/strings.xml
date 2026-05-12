@@ -60,4 +60,6 @@
     <string name="delete_all_title">Hapus semua sesi?</string>
     <string name="delete_all_message">Semua riwayat belajar akan dihapus permanen dan tidak bisa dikembalikan.</string>
     <string name="label_cancel">Batal</string>
+    <string name="tampilan_list">Tampilan list</string>
+    <string name="tampilan_grid">Tampilan grid</string>
 </resources>

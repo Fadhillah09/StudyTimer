@@ -60,4 +60,6 @@
     <string name="delete_all_title">Delete all sessions?</string>
     <string name="delete_all_message">All learning history will be permanently deleted and cannot be restored.</string>
     <string name="label_cancel">Cancel</string>
+    <string name="tampilan_list">List view</string>
+    <string name="tampilan_grid">Grid view</string>
 </resources>
