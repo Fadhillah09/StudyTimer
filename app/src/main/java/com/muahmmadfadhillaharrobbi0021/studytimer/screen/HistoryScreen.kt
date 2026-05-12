@@ -40,12 +40,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -61,6 +61,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.muahmmadfadhillaharrobbi0021.studytimer.R
 import com.muahmmadfadhillaharrobbi0021.studytimer.model.Session
 import com.muahmmadfadhillaharrobbi0021.studytimer.utils.SettingsDataStore
+import com.muahmmadfadhillaharrobbi0021.studytimer.utils.ThemeColor
 import com.muahmmadfadhillaharrobbi0021.studytimer.utils.ViewModelFactory
 import kotlinx.coroutines.launch
 
@@ -70,10 +71,13 @@ fun HistoryScreen(
     onItemClick: (Long) -> Unit
 ) {
     val context = LocalContext.current
+    val dataStore = remember { SettingsDataStore(context) }
+    val selectedTheme by dataStore.themeFlow.collectAsState(initial = "Cyan")
+    val accentColor = ThemeColor.fromString(selectedTheme)
+
     val viewModel: HistoryViewModel = viewModel(factory = ViewModelFactory(context))
     val sessions by viewModel.sessions.collectAsState()
 
-    val dataStore = SettingsDataStore(context)
     val showList by dataStore.layoutFlow.collectAsState(initial = true)
     val scope = rememberCoroutineScope()
 
@@ -87,11 +91,11 @@ fun HistoryScreen(
         colors = listOf(darkBackground, neonBlueDark)
     )
 
-    var showDeleteAllDialog by remember { mutableStateOf(false) }
+    val showDeleteAllDialog: MutableState<Boolean> = remember { mutableStateOf(false) }
 
-    if (showDeleteAllDialog) {
+    if (showDeleteAllDialog.value) {
         AlertDialog(
-            onDismissRequest = { showDeleteAllDialog = false },
+            onDismissRequest = { showDeleteAllDialog.value = false },
             containerColor = darkSurface,
             shape = RoundedCornerShape(16.dp),
             title = {
@@ -113,7 +117,7 @@ fun HistoryScreen(
                 TextButton(
                     onClick = {
                         viewModel.deleteAll()
-                        showDeleteAllDialog = false
+                        showDeleteAllDialog.value = false
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)
                 ) {
@@ -122,7 +126,7 @@ fun HistoryScreen(
             },
             dismissButton = {
                 TextButton(
-                    onClick = { showDeleteAllDialog = false },
+                    onClick = { showDeleteAllDialog.value = false },
                     colors = ButtonDefaults.textButtonColors(contentColor = textPrimary)
                 ) {
                     Text(stringResource(R.string.label_cancel))
@@ -138,7 +142,7 @@ fun HistoryScreen(
                     Text(
                         text = stringResource(R.string.menu_history),
                         fontWeight = FontWeight.ExtraBold,
-                        color = textPrimary
+                        color = accentColor
                     )
                 },
                 navigationIcon = {
@@ -159,11 +163,11 @@ fun HistoryScreen(
                             imageVector = if (showList) Icons.Default.GridView
                             else Icons.AutoMirrored.Filled.ViewList,
                             contentDescription = null,
-                            tint = neonCyan
+                            tint = accentColor
                         )
                     }
                     if (sessions.isNotEmpty()) {
-                        IconButton(onClick = { showDeleteAllDialog = true }) {
+                        IconButton(onClick = { showDeleteAllDialog.value = true }) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
                                 contentDescription = null,

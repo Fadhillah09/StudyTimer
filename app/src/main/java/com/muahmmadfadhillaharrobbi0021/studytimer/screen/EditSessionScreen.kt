@@ -44,6 +44,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -62,6 +63,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.muahmmadfadhillaharrobbi0021.studytimer.R
+import com.muahmmadfadhillaharrobbi0021.studytimer.utils.SettingsDataStore
+import com.muahmmadfadhillaharrobbi0021.studytimer.utils.ThemeColor
 import com.muahmmadfadhillaharrobbi0021.studytimer.utils.ViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -73,6 +76,10 @@ fun EditSessionScreen(
     onBackClick: () -> Unit
 ) {
     val context = LocalContext.current
+    val dataStore = remember { SettingsDataStore(context) }
+    val selectedTheme by dataStore.themeFlow.collectAsState(initial = "Cyan")
+    val accentColor = ThemeColor.fromString(selectedTheme)
+
     val factory = ViewModelFactory(context)
     val viewModel: HistoryViewModel = viewModel(factory = factory)
 
@@ -96,7 +103,6 @@ fun EditSessionScreen(
     val expandedCategory: MutableState<Boolean> = remember { mutableStateOf(false) }
     val showDialog: MutableState<Boolean> = remember { mutableStateOf(false) }
 
-    val neonCyan = colorResource(R.color.neon_cyan)
     val darkBackground = colorResource(R.color.dark_background)
     val darkSurface = colorResource(R.color.dark_surface)
     val textPrimary = colorResource(R.color.text_primary)
@@ -172,7 +178,7 @@ fun EditSessionScreen(
                     Text(
                         text = stringResource(R.string.edit_session),
                         fontWeight = FontWeight.ExtraBold,
-                        color = textPrimary
+                        color = accentColor
                     )
                 },
                 navigationIcon = {
@@ -217,7 +223,7 @@ fun EditSessionScreen(
                         Icon(
                             imageVector = Icons.Default.Check,
                             contentDescription = stringResource(R.string.label_save),
-                            tint = textPrimary
+                            tint = accentColor
                         )
                     }
 
@@ -257,37 +263,37 @@ fun EditSessionScreen(
                 OutlinedTextField(
                     value = courseName,
                     onValueChange = { courseName = it },
-                    label = { Text(stringResource(R.string.label_activity_name), color = textPrimary) },
+                    label = { Text(stringResource(R.string.label_activity_name), color = accentColor) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = textPrimary,
                         unfocusedTextColor = textPrimary,
-                        focusedBorderColor = neonCyan,
+                        focusedBorderColor = accentColor,
                         unfocusedBorderColor = Color.Gray,
-                        focusedLabelColor = neonCyan
+                        focusedLabelColor = accentColor
                     )
                 )
 
                 Column {
                     Text(
                         text = stringResource(R.string.label_select_mode),
-                        color = textPrimary,
+                        color = accentColor,
                         fontWeight = FontWeight.Bold
                     )
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         RadioButton(
                             selected = selectedMode == modeFocus,
                             onClick = { selectedMode = modeFocus },
-                            colors = RadioButtonDefaults.colors(selectedColor = neonCyan)
+                            colors = RadioButtonDefaults.colors(selectedColor = accentColor)
                         )
                         Text(modeFocus, color = textPrimary)
                         Spacer(modifier = Modifier.width(16.dp))
                         RadioButton(
                             selected = selectedMode == modeBreak,
                             onClick = { selectedMode = modeBreak },
-                            colors = RadioButtonDefaults.colors(selectedColor = neonCyan)
+                            colors = RadioButtonDefaults.colors(selectedColor = accentColor)
                         )
                         Text(modeBreak, color = textPrimary)
                     }
@@ -301,7 +307,7 @@ fun EditSessionScreen(
                     }
                     Text(
                         text = "${stringResource(R.string.label_concentration)}: $statusText",
-                        color = textPrimary,
+                        color = accentColor,
                         fontWeight = FontWeight.Bold
                     )
                     Slider(
@@ -310,8 +316,8 @@ fun EditSessionScreen(
                         valueRange = 1f..3f,
                         steps = 1,
                         colors = SliderDefaults.colors(
-                            thumbColor = neonCyan,
-                            activeTrackColor = neonCyan
+                            thumbColor = accentColor,
+                            activeTrackColor = accentColor
                         )
                     )
                 }
@@ -324,7 +330,7 @@ fun EditSessionScreen(
                         value = selectedCategory,
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text(stringResource(R.string.label_category), color = textPrimary) },
+                        label = { Text(stringResource(R.string.label_category), color = accentColor) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expandedCategory.value) },
                         modifier = Modifier
                             .menuAnchor(MenuAnchorType.PrimaryNotEditable)
@@ -333,10 +339,10 @@ fun EditSessionScreen(
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedTextColor = textPrimary,
                             unfocusedTextColor = textPrimary,
-                            focusedBorderColor = neonCyan,
+                            focusedBorderColor = accentColor,
                             unfocusedBorderColor = Color.Gray,
-                            focusedLabelColor = neonCyan,
-                            focusedTrailingIconColor = neonCyan
+                            focusedLabelColor = accentColor,
+                            focusedTrailingIconColor = accentColor
                         )
                     )
                     ExposedDropdownMenu(

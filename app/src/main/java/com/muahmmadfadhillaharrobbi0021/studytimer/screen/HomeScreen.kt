@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -27,6 +28,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muahmmadfadhillaharrobbi0021.studytimer.R
+import com.muahmmadfadhillaharrobbi0021.studytimer.utils.SettingsDataStore
+import com.muahmmadfadhillaharrobbi0021.studytimer.utils.ThemeColor
 
 @Composable
 fun HomeScreen(
@@ -35,6 +38,10 @@ fun HomeScreen(
     onSettingsClick: () -> Unit,
     onAboutClick: () -> Unit
 ) {
+    val context = LocalContext.current
+    val dataStore = SettingsDataStore(context)
+    val selectedTheme by dataStore.themeFlow.collectAsState(initial = "Cyan")
+
     val modeFocus = stringResource(R.string.mode_focus)
     val modeBreak = stringResource(R.string.mode_break)
     val durationList = listOf(
@@ -61,7 +68,8 @@ fun HomeScreen(
     var selectedKategori by rememberSaveable { mutableStateOf(kategoriList[0]) }
     var concentrationLevel by rememberSaveable { mutableFloatStateOf(2f) }
 
-    val neonCyan = colorResource(R.color.neon_cyan)
+    val accentColor = ThemeColor.fromString(selectedTheme)
+
     val darkBackground = colorResource(R.color.dark_background)
     val darkSurface = colorResource(R.color.dark_surface)
     val neonBlueDark = colorResource(R.color.neon_blue_dark)
@@ -74,11 +82,11 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(stringResource(R.string.title_home), fontWeight = FontWeight.ExtraBold, color = textPrimary) },
+                title = { Text(stringResource(R.string.title_home), fontWeight = FontWeight.ExtraBold, color = accentColor) },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Transparent),
                 actions = {
                     IconButton(onClick = onAboutClick) {
-                        Icon(imageVector = Icons.Default.Info, contentDescription = null, tint = textPrimary)
+                        Icon(imageVector = Icons.Default.Info, contentDescription = null, tint = accentColor)
                     }
                 }
             )
@@ -109,7 +117,7 @@ fun HomeScreen(
                     text = stringResource(R.string.welcome_header),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.ExtraBold,
-                    color = neonCyan
+                    color = accentColor
                 )
 
                 // Card Form Input
@@ -130,25 +138,25 @@ fun HomeScreen(
                             colors = OutlinedTextFieldDefaults.colors(
                                 focusedTextColor = textPrimary,
                                 unfocusedTextColor = textPrimary,
-                                focusedBorderColor = neonCyan,
+                                focusedBorderColor = accentColor,
                                 unfocusedBorderColor = Color.Gray,
-                                focusedLabelColor = neonCyan
+                                focusedLabelColor = accentColor
                             )
                         )
                         Column {
-                            Text(stringResource(R.string.label_select_mode), color = textPrimary, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.label_select_mode), color = accentColor, fontWeight = FontWeight.Bold)
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 RadioButton(
                                     selected = selectedMode == modeFocus,
                                     onClick = { selectedMode = modeFocus },
-                                    colors = RadioButtonDefaults.colors(selectedColor = neonCyan)
+                                    colors = RadioButtonDefaults.colors(selectedColor = accentColor)
                                 )
                                 Text(modeFocus, color = textPrimary)
                                 Spacer(Modifier.width(16.dp))
                                 RadioButton(
                                     selected = selectedMode == modeBreak,
                                     onClick = { selectedMode = modeBreak },
-                                    colors = RadioButtonDefaults.colors(selectedColor = neonCyan)
+                                    colors = RadioButtonDefaults.colors(selectedColor = accentColor)
                                 )
                                 Text(modeBreak, color = textPrimary)
                             }
@@ -161,7 +169,7 @@ fun HomeScreen(
                             }
                             Text(
                                 text = "${stringResource(R.string.label_concentration)}: $statusText",
-                                color = textPrimary,
+                                color = accentColor,
                                 fontWeight = FontWeight.Bold
                             )
                             Slider(
@@ -169,7 +177,7 @@ fun HomeScreen(
                                 onValueChange = { concentrationLevel = it },
                                 valueRange = 1f..3f,
                                 steps = 1,
-                                colors = SliderDefaults.colors(thumbColor = neonCyan, activeTrackColor = neonCyan)
+                                colors = SliderDefaults.colors(thumbColor = accentColor, activeTrackColor = accentColor)
                             )
                         }
 
@@ -182,21 +190,24 @@ fun HomeScreen(
                                 value = selectedDuration,
                                 onValueChange = {},
                                 readOnly = true,
-                                label = { Text(stringResource(R.string.label_duration), color = textPrimary) },
+                                label = { Text(stringResource(R.string.label_duration), color = accentColor) },
                                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expandedDuration) },
-                                modifier = Modifier.menuAnchor().fillMaxWidth(),
+                                modifier = Modifier
+                                    .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                                    .fillMaxWidth(),
                                 shape = RoundedCornerShape(16.dp),
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedTextColor = textPrimary,
-                                    focusedBorderColor = neonCyan,
-                                    focusedLabelColor = neonCyan,
-                                    focusedTrailingIconColor = neonCyan
+                                    focusedBorderColor = accentColor,
+                                    focusedLabelColor = accentColor,
+                                    focusedTrailingIconColor = accentColor
                                 )
                             )
                             ExposedDropdownMenu(
                                 expanded = expandedDuration,
                                 onDismissRequest = { expandedDuration = false },
-                                modifier = Modifier.background(darkSurface)
+                                modifier = Modifier.background(
+                                    darkSurface)
                             ) {
                                 durationList.forEach { duration ->
                                     DropdownMenuItem(
@@ -214,15 +225,17 @@ fun HomeScreen(
                                 value = selectedKategori,
                                 onValueChange = {},
                                 readOnly = true,
-                                label = { Text(stringResource(R.string.label_category), color = textPrimary) },
+                                label = { Text(stringResource(R.string.label_category), color = accentColor) },
                                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expandedKategori) },
-                                modifier = Modifier.menuAnchor().fillMaxWidth(),
+                                modifier = Modifier
+                                    .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                                    .fillMaxWidth(),
                                 shape = RoundedCornerShape(16.dp),
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedTextColor = textPrimary,
-                                    focusedBorderColor = neonCyan,
-                                    focusedLabelColor = neonCyan,
-                                    focusedTrailingIconColor = neonCyan
+                                    focusedBorderColor = accentColor,
+                                    focusedLabelColor = accentColor,
+                                    focusedTrailingIconColor = accentColor
                                 )
                             )
                             ExposedDropdownMenu(
@@ -248,7 +261,7 @@ fun HomeScreen(
                     enabled = activityName.isNotBlank(),
                     modifier = Modifier.fillMaxWidth().height(60.dp),
                     shape = RoundedCornerShape(20.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = neonCyan, contentColor = Color.Black)
+                    colors = ButtonDefaults.buttonColors(containerColor = accentColor, contentColor = Color.Black)
                 ) {
                     Icon(Icons.Default.PlayArrow, null)
                     Spacer(Modifier.width(8.dp))
@@ -263,14 +276,14 @@ fun HomeScreen(
                         icon = Icons.Default.History,
                         modifier = Modifier.weight(1f),
                         onClick = onHistoryClick,
-                        accentColor = neonCyan
+                        accentColor = accentColor
                     )
                     SmallMenuCard(
                         title = stringResource(R.string.menu_settings),
                         icon = Icons.Default.Settings,
                         modifier = Modifier.weight(1f),
                         onClick = onSettingsClick,
-                        accentColor = neonCyan
+                        accentColor = accentColor
                     )
                 }
 

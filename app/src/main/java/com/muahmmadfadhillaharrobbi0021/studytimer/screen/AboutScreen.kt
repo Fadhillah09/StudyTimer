@@ -11,15 +11,20 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -28,11 +33,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muahmmadfadhillaharrobbi0021.studytimer.R
+import com.muahmmadfadhillaharrobbi0021.studytimer.utils.SettingsDataStore
+import com.muahmmadfadhillaharrobbi0021.studytimer.utils.ThemeColor
 
 @Composable
-fun AboutAppScreen(
+fun AboutScreen(
     onBackClick: () -> Unit
 ) {
+    val context = LocalContext.current
+    val dataStore = remember { SettingsDataStore(context) }
+    val selectedTheme by dataStore.themeFlow.collectAsState(initial = "Cyan")
     val neonCyan = colorResource(R.color.neon_cyan)
     val darkBackground = colorResource(R.color.dark_background)
     val darkSurface = colorResource(R.color.dark_surface)
@@ -43,6 +53,8 @@ fun AboutAppScreen(
         colors = listOf(darkBackground, neonBlueDark)
     )
 
+    val accentColor = ThemeColor.fromString(selectedTheme)
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -50,12 +62,12 @@ fun AboutAppScreen(
                     Text(
                         text = stringResource(R.string.title_about),
                         fontWeight = FontWeight.ExtraBold,
-                        color = textPrimary
+                        color = accentColor
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = textPrimary)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = textPrimary)
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Transparent)
@@ -99,7 +111,7 @@ fun AboutAppScreen(
                             text = stringResource(R.string.app_name),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.ExtraBold,
-                            color = neonCyan
+                            color = accentColor
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
@@ -119,7 +131,7 @@ fun AboutAppScreen(
                     text = stringResource(R.string.about_developer),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = neonCyan,
+                    color = accentColor,
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -138,11 +150,11 @@ fun AboutAppScreen(
                             modifier = Modifier
                                 .size(60.dp)
                                 .clip(CircleShape)
-                                .background(neonCyan.copy(alpha = 0.1f))
-                                .border(2.dp, neonCyan, CircleShape),
+                                .background(accentColor.copy(alpha = 0.1f))
+                                .border(2.dp, accentColor, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(Icons.Default.Person, contentDescription = null, tint = neonCyan, modifier = Modifier.size(32.dp))
+                            Icon(Icons.Default.Person, contentDescription = null, tint = accentColor, modifier = Modifier.size(32.dp))
                         }
 
                         Spacer(modifier = Modifier.width(16.dp))
@@ -164,7 +176,7 @@ fun AboutAppScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "${stringResource(R.string.about_version_label)} 1.0.0 Stable",
+                    text = "${stringResource(R.string.about_version_label)} 1.2.0 Stable",
                     style = MaterialTheme.typography.labelSmall,
                     color = colorResource(R.color.text_secondary)
                 )

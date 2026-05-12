@@ -62,4 +62,10 @@
     <string name="label_cancel">Cancel</string>
     <string name="tampilan_list">List view</string>
     <string name="tampilan_grid">Grid view</string>
+    <string name="setting_theme">Color Theme</string>
+    <string name="setting_theme_sub">Choose app accent color</string>
+    <string name="theme_cyan">Cyan</string>
+    <string name="theme_purple">Purple</string>
+    <string name="theme_green">Green</string>
+    <string name="theme_orange">Orange</string>
 </resources>

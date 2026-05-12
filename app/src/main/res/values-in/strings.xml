@@ -62,4 +62,10 @@
     <string name="label_cancel">Batal</string>
     <string name="tampilan_list">Tampilan list</string>
     <string name="tampilan_grid">Tampilan grid</string>
+    <string name="setting_theme">Tema Warna</string>
+    <string name="setting_theme_sub">Pilih warna aksen aplikasi</string>
+    <string name="theme_cyan">Cyan</string>
+    <string name="theme_purple">Ungu</string>
+    <string name="theme_green">Hijau</string>
+    <string name="theme_orange">Oranye</string>
 </resources>
