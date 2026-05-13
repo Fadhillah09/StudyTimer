@@ -11,6 +11,7 @@ import com.muahmmadfadhillaharrobbi0021.studytimer.screen.CourseScreen
 import com.muahmmadfadhillaharrobbi0021.studytimer.screen.EditSessionScreen
 import com.muahmmadfadhillaharrobbi0021.studytimer.screen.HistoryScreen
 import com.muahmmadfadhillaharrobbi0021.studytimer.screen.HomeScreen
+import com.muahmmadfadhillaharrobbi0021.studytimer.screen.RecycleBinScreen
 import com.muahmmadfadhillaharrobbi0021.studytimer.screen.SettingsScreen
 import com.muahmmadfadhillaharrobbi0021.studytimer.screen.TimerScreen
 
@@ -52,7 +53,8 @@ fun NavGraph(navController: NavHostController) {
         composable("history") {
             HistoryScreen(
                 onBackClick = { navController.popBackStack() },
-                onItemClick = { id -> navController.navigate("edit/$id") }
+                onItemClick = { id -> navController.navigate("edit/$id") },
+                onRecycleBinClick = { navController.navigate("recycle_bin") }
             )
         }
 
@@ -83,6 +85,11 @@ fun NavGraph(navController: NavHostController) {
 
         composable("courses") {
             CourseScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+        composable("recycle_bin") {
+            RecycleBinScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }

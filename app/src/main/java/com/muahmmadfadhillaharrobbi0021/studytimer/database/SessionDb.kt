@@ -9,7 +9,7 @@ import com.muahmmadfadhillaharrobbi0021.studytimer.model.Session
 
 @Database(
     entities = [Session::class, Course::class],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class SessionDb : RoomDatabase() {

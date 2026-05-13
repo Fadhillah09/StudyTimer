@@ -16,16 +16,22 @@ interface SessionDao {
     @Update
     suspend fun update(session: Session)
 
-    @Query("SELECT * FROM sessions ORDER BY timestamp DESC")
+    @Query("SELECT * FROM sessions WHERE isDeleted = 0 ORDER BY timestamp DESC")
     fun getSessions(): Flow<List<Session>>
 
-    @Query("SELECT * FROM sessions WHERE id = :id LIMIT 1")
-    suspend fun getSessionById(id: Long): Session?
+    @Query("UPDATE sessions SET isDeleted = 1 WHERE id = :id")
+    suspend fun moveToRecycleBin(id: Long)
+
+    @Query("UPDATE sessions SET isDeleted = 0 WHERE id = :id")
+    suspend fun restoreFromRecycleBin(id: Long)
 
     @Query("DELETE FROM sessions WHERE id = :id")
     suspend fun deleteById(id: Long)
 
-    @Query("DELETE FROM sessions")
-    suspend fun deleteAll()
+    @Query("SELECT * FROM sessions WHERE isDeleted = 1 ORDER BY timestamp DESC")
+    fun getRecycleBin(): Flow<List<Session>>
+
+    @Query("DELETE FROM sessions WHERE isDeleted = 1")
+    suspend fun emptyRecycleBin()
 
 }

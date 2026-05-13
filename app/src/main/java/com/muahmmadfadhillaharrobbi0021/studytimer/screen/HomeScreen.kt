@@ -91,12 +91,14 @@ fun HomeScreen(
     val modeFocus = stringResource(R.string.mode_focus)
     val modeBreak = stringResource(R.string.mode_break)
     val durationList = listOf(
+        stringResource(R.string.label_select_duration),
         stringResource(R.string.duration_10s),
         stringResource(R.string.duration_25),
         stringResource(R.string.duration_50),
         stringResource(R.string.duration_90)
     )
     val categoryList = listOf(
+        stringResource(R.string.label_select_category),
         stringResource(R.string.cat_study),
         stringResource(R.string.cat_assignment),
         stringResource(R.string.cat_others)
@@ -106,7 +108,7 @@ fun HomeScreen(
     val highText = stringResource(R.string.con_high)
 
     var activityName by rememberSaveable { mutableStateOf("") }
-    var selectedMode by rememberSaveable { mutableStateOf(modeFocus) }
+    var selectedMode by rememberSaveable { mutableStateOf("") }
     var selectedDuration by rememberSaveable { mutableStateOf(durationList[0]) }
     var selectedCategory by rememberSaveable { mutableStateOf(categoryList[0]) }
     var concentrationLevel by rememberSaveable { mutableFloatStateOf(2f) }
@@ -408,7 +410,9 @@ fun HomeScreen(
                             selectedMode
                         )
                     },
-                    enabled = activityName.isNotBlank(),
+                    enabled = activityName.isNotBlank() &&
+                            selectedDuration != durationList[0] &&
+                            selectedCategory != categoryList[0],
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(60.dp),

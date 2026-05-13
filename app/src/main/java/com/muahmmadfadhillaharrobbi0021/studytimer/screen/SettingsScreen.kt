@@ -155,7 +155,6 @@ fun SettingsScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Tema Warna
                 Text(
                     text = stringResource(R.string.setting_theme),
                     color = accentColor,
@@ -212,7 +211,6 @@ fun SettingsScreen(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // Notifikasi
                 Text(
                     text = stringResource(R.string.setting_notif_sound),
                     color = accentColor,
@@ -231,7 +229,6 @@ fun SettingsScreen(
                     darkSurface = darkSurface
                 )
 
-                // Lainnya
                 Text(
                     text = stringResource(R.string.setting_others),
                     color = accentColor,

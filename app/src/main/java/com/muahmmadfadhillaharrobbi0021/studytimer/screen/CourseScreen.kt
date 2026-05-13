@@ -139,7 +139,6 @@ fun CourseScreen(
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Input tambah course
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically

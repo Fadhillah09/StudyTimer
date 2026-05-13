@@ -9,11 +9,16 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class HistoryViewModel(private val dao: SessionDao) : ViewModel() {
 
     val sessions: StateFlow<List<Session>> = dao.getSessions().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = emptyList()
+    )
+
+    val recycleBin: StateFlow<List<Session>> = dao.getRecycleBin().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
         initialValue = emptyList()
@@ -40,10 +45,8 @@ class HistoryViewModel(private val dao: SessionDao) : ViewModel() {
         }
     }
 
-    suspend fun getSessionById(id: Long): Session? {
-        return withContext(Dispatchers.IO) {
-            dao.getSessionById(id)
-        }
+    fun getSessionById(id: Long): Session? {
+        return sessions.value.find { it.id == id }
     }
 
     fun update(
@@ -71,13 +74,34 @@ class HistoryViewModel(private val dao: SessionDao) : ViewModel() {
 
     fun delete(id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
+            dao.moveToRecycleBin(id)
+        }
+    }
+
+    fun restore(id: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.restoreFromRecycleBin(id)
+        }
+    }
+
+    fun deletePermanent(id: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
             dao.deleteById(id)
         }
     }
 
-    fun deleteAll() {
+    fun emptyRecycleBin() {
         viewModelScope.launch(Dispatchers.IO) {
-            dao.deleteAll()
+            dao.emptyRecycleBin()
+        }
+    }
+
+    fun moveAllToRecycleBin() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val sessionIds = sessions.value.map { it.id }
+            sessionIds.forEach { id ->
+                dao.moveToRecycleBin(id)
+            }
         }
     }
 }

@@ -259,7 +259,6 @@ fun EditSessionScreen(
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Course Name
                 OutlinedTextField(
                     value = courseName,
                     onValueChange = { courseName = it },

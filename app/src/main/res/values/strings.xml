@@ -58,7 +58,7 @@
     <string name="dialog_cancel">Cancel</string>
     <string name="invalid_input">Activity name cannot be empty</string>
     <string name="delete_all_title">Delete all sessions?</string>
-    <string name="delete_all_message">All learning history will be permanently deleted and cannot be restored.</string>
+    <string name="delete_all_message">All study history will be deleted.</string>
     <string name="label_cancel">Cancel</string>
     <string name="tampilan_list">List view</string>
     <string name="tampilan_grid">Grid view</string>
@@ -71,4 +71,10 @@
     <string name="menu_courses">Course List</string>
     <string name="label_course_name">Course Name</string>
     <string name="courses_empty">No courses yet. Add one!</string>
+    <string name="recycle_bin">Recycle Bin</string>
+    <string name="recycle_bin_empty">Recycle bin is empty</string>
+    <string name="btn_restore">Restore</string>
+    <string name="btn_delete_permanent">Delete Permanently</string>
+    <string name="label_select_duration">Select Duration</string>
+    <string name="label_select_category">Select Category</string>
 </resources>

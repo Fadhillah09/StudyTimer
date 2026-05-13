@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.muahmmadfadhillaharrobbi0021.studytimer.R
+import com.muahmmadfadhillaharrobbi0021.studytimer.utils.SettingsDataStore
+import com.muahmmadfadhillaharrobbi0021.studytimer.utils.ThemeColor
 import com.muahmmadfadhillaharrobbi0021.studytimer.utils.ViewModelFactory
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
@@ -41,6 +43,10 @@ fun TimerScreen(
     mode: String
 ) {
     val context = LocalContext.current
+    val dataStore = remember { SettingsDataStore(context) }
+    val selectedTheme by dataStore.themeFlow.collectAsState(initial = "Cyan")
+
+    val accentColor = ThemeColor.fromString(selectedTheme)
     val factory = ViewModelFactory(context)
     val viewModel: HistoryViewModel = viewModel(factory = factory)
 
@@ -119,7 +125,7 @@ fun TimerScreen(
                     Text(
                         stringResource(R.string.title_home),
                         fontWeight = FontWeight.ExtraBold,
-                        color = textPrimary
+                        color = accentColor
                     )
                 },
                 navigationIcon = {
@@ -153,7 +159,7 @@ fun TimerScreen(
             ) {
                 Text(
                     text = "$category - $activityName",
-                    color = neonCyan,
+                    color = accentColor,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                     textAlign = TextAlign.Center
@@ -194,7 +200,7 @@ fun TimerScreen(
                                 text = String.format(Locale.US, "%02d:%02d", minutes, seconds),
                                 style = MaterialTheme.typography.displayLarge,
                                 fontWeight = FontWeight.ExtraBold,
-                                color = neonCyan,
+                                color = accentColor,
                                 fontSize = 72.sp
                             )
                         }
@@ -232,7 +238,7 @@ fun TimerScreen(
                         modifier = Modifier.size(90.dp),
                         shape = CircleShape,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = neonCyan,
+                            containerColor = accentColor,
                             contentColor = Color.Black
                         ),
                         elevation = ButtonDefaults.buttonElevation(defaultElevation = 10.dp)
@@ -250,12 +256,12 @@ fun TimerScreen(
                         onClick = { shareResults(context, activityName, durationMinutes) },
                         modifier = Modifier.size(60.dp),
                         shape = CircleShape,
-                        border = androidx.compose.foundation.BorderStroke(1.dp, neonCyan)
+                        border = androidx.compose.foundation.BorderStroke(1.dp, accentColor)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Share,
                             contentDescription = null,
-                            tint = neonCyan
+                            tint = accentColor
                         )
                     }
                 }

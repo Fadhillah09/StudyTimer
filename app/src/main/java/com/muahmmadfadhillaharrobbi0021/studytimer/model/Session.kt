@@ -12,5 +12,6 @@ data class Session(
     val concentration: String,
     val duration: String,
     val category: String,
-    val timestamp: String
+    val timestamp: String,
+    val isDeleted: Boolean = false
 )

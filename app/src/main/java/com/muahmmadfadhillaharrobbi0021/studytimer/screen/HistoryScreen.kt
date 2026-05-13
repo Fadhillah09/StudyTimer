@@ -68,7 +68,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun HistoryScreen(
     onBackClick: () -> Unit,
-    onItemClick: (Long) -> Unit
+    onItemClick: (Long) -> Unit,
+    onRecycleBinClick: () -> Unit
 ) {
     val context = LocalContext.current
     val dataStore = remember { SettingsDataStore(context) }
@@ -116,7 +117,7 @@ fun HistoryScreen(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        viewModel.deleteAll()
+                        viewModel.moveAllToRecycleBin()
                         showDeleteAllDialog.value = false
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)
@@ -155,7 +156,6 @@ fun HistoryScreen(
                     }
                 },
                 actions = {
-                    // Toggle list/grid
                     IconButton(onClick = {
                         scope.launch { dataStore.saveLayout(!showList) }
                     }) {
@@ -166,6 +166,15 @@ fun HistoryScreen(
                             tint = accentColor
                         )
                     }
+
+                    IconButton(onClick = onRecycleBinClick) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = stringResource(R.string.recycle_bin),
+                            tint = Color.Gray
+                        )
+                    }
+
                     if (sessions.isNotEmpty()) {
                         IconButton(onClick = { showDeleteAllDialog.value = true }) {
                             Icon(
