@@ -68,4 +68,7 @@
     <string name="theme_purple">Ungu</string>
     <string name="theme_green">Hijau</string>
     <string name="theme_orange">Oranye</string>
+    <string name="menu_courses">Daftar Mata Kuliah</string>
+    <string name="label_course_name">Nama Mata Kuliah</string>
+    <string name="courses_empty">Belum ada mata kuliah. Tambahkan dulu!</string>
 </resources>

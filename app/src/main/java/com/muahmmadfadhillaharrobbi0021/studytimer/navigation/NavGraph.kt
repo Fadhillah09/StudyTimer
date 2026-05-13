@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.muahmmadfadhillaharrobbi0021.studytimer.screen.AboutScreen
+import com.muahmmadfadhillaharrobbi0021.studytimer.screen.CourseScreen
 import com.muahmmadfadhillaharrobbi0021.studytimer.screen.EditSessionScreen
 import com.muahmmadfadhillaharrobbi0021.studytimer.screen.HistoryScreen
 import com.muahmmadfadhillaharrobbi0021.studytimer.screen.HomeScreen
@@ -69,12 +70,19 @@ fun NavGraph(navController: NavHostController) {
         composable("settings") {
             SettingsScreen(
                 onBackClick = { navController.popBackStack() },
-                onAboutClick = { navController.navigate("about") }
+                onAboutClick = { navController.navigate("about") },
+                onCoursesClick = { navController.navigate("courses") }
             )
         }
 
         composable("about") {
             AboutScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable("courses") {
+            CourseScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }

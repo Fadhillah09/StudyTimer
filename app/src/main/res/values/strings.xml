@@ -68,4 +68,7 @@
     <string name="theme_purple">Purple</string>
     <string name="theme_green">Green</string>
     <string name="theme_orange">Orange</string>
+    <string name="menu_courses">Course List</string>
+    <string name="label_course_name">Course Name</string>
+    <string name="courses_empty">No courses yet. Add one!</string>
 </resources>
